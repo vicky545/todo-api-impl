@@ -1,0 +1,28 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+	http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <sub-flow name="update-task-by-id-subflow">
+        <logger doc:name="Start Logger" doc:id="ynxhid" message="Start - Update task by id subow"/>
+        <set-variable doc:name="Set variable" doc:id="paokik" variableName="updatedId" value="#[ attributes.uriParams.taskId as Number]"/>
+        <ee:transform doc:name="Form query Transform" doc:id="nvwdsu" >
+            <ee:message >
+                <ee:set-payload doc:name="Set payload" doc:id="xzergw" resource="dw/update-task-by-id-request.dwl"/>
+            </ee:message>    
+        </ee:transform>
+        <db:update doc:name="Update" doc:id="jrfwcq" config-ref="Mysql_Database_Config">
+            <db:sql><![CDATA[#[payload.sqlText]]]></db:sql>
+            <db:input-parameters><![CDATA[#[payload.params]]]></db:input-parameters>    
+        </db:update>
+        <db:select doc:name="Select updated record" doc:id="xdttjz" config-ref="Mysql_Database_Config">
+            <db:sql><![CDATA[SELECT * FROM tasks WHERE id = :myId]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'myId': vars.updatedId as Number}]]]></db:input-parameters>    
+        </db:select>
+        <ee:transform doc:name="Transform response" doc:id="lglpea" >
+            <ee:message >
+                <ee:set-payload doc:name="Set payload" doc:id="dtifkt" resource="dw/get-all-tasks-response.dwl"/>
+            </ee:message>
+        </ee:transform>
+        <logger doc:name="End Logger" doc:id="haplak" message="END - Update task by id subflow"/></sub-flow>
+</mule>

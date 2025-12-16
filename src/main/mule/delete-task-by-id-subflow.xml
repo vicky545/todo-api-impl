@@ -1,0 +1,22 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+	http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <sub-flow name="delete-task-by-id-subflow">
+        <logger doc:name="Start Logger" doc:id="whqpse" message="Start - delete task by id flow"/>
+        <db:select doc:name="Select" doc:id="uabpjj" config-ref="Mysql_Database_Config" target="deletedRecord">
+            <db:sql><![CDATA[SELECT * FROM tasks WHERE id = :myId]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'myId': attributes.uriParams.taskId as Number}]]]></db:input-parameters>    
+        </db:select>
+        <db:delete doc:name="Delete task" doc:id="sohkow" config-ref="Mysql_Database_Config">
+            <db:sql><![CDATA[DELETE FROM tasks WHERE id = :myId]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'myId': attributes.uriParams.taskId as Number}]]]></db:input-parameters>    
+        </db:delete>
+        <ee:transform doc:name="Transform response" doc:id="eiuwov" >
+            <ee:message >
+                <ee:set-payload doc:name="Set payload" doc:id="luyvgv" resource="dw/delete-task-by-id-response.dwl"/>
+            </ee:message>
+        </ee:transform>
+        <logger doc:name="End Logger" doc:id="ixteup" message="END - Delete taskby id flow"/></sub-flow>
+</mule>

@@ -1,0 +1,32 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+	http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+  <sub-flow name="get-task-by-id-subflow">
+    <logger doc:name="Start Logger" doc:id="srwqjx" message="Start - Get Task by Id flow"/>
+    <db:select doc:name="Select" doc:id="oqtbkr" config-ref="Mysql_Database_Config">
+        <db:sql><![CDATA[SELECT * FROM tasks WHERE id = :myId]]></db:sql>
+            <db:input-parameters><![CDATA[#[{'myId': attributes.uriParams.taskId as Number}]]]></db:input-parameters>        
+    </db:select>
+    <choice doc:name="Choice" doc:id="gktyav">
+        
+    <when expression="#[isEmpty(payload)]">
+        <ee:transform doc:name="Transform" doc:id="sauljj" >
+          <ee:message >
+            <ee:set-payload doc:name="Set payload" doc:id="qssdnr" resource="dw/task-not-found.dwl"/>
+          </ee:message>
+          <ee:variables>
+                        <ee:set-variable variableName="httpStatus" resource="dw/set-404.dwl"/>
+                    </ee:variables>            
+        </ee:transform>
+                <raise-error doc:name="Raise error" doc:id="rpeejv" type="APP:TASK_NOT_FOUND" description="task not found"/></when>
+      <otherwise>
+        <ee:transform doc:name="Transform select output" doc:id="jscsfj" >
+              <ee:message >
+                <ee:set-payload doc:name="Set payload" doc:id="ttlebb" resource="dw/get-all-tasks-response.dwl"/>
+              </ee:message>
+            </ee:transform>
+      </otherwise></choice>
+    <logger doc:name="End Logger" doc:id="rhopdi" message="End - get task by id flow"/></sub-flow>
+</mule>

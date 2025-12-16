@@ -1,0 +1,27 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+	http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <sub-flow name="create-new-task-subflow">
+        <logger doc:name="Start Logger" doc:id="uxebpr" message="Start - create new task low"/>
+        <set-variable value="#[payload]" variableName="payload1" doc:name="Set payload1 variable" doc:id="rnvknb" />
+        <ee:transform doc:name="Create SQL Transform" doc:id="tdgkey" >
+            <ee:message >
+                <ee:set-payload doc:name="Set payload" doc:id="dupiiq" resource="dw/create-new-task-request.dwl"/>
+            </ee:message>
+        </ee:transform>
+        <db:insert doc:name="Insert" doc:id="myqfzy" config-ref="Mysql_Database_Config" autoGenerateKeys="true">
+            <db:sql><![CDATA[#[payload.query]]]></db:sql>
+            <db:input-parameters><![CDATA[#[payload.inputParams]]]></db:input-parameters>
+            <db:auto-generated-keys-column-names>
+                <db:auto-generated-keys-column-name value="id"/>
+            </db:auto-generated-keys-column-names>            
+        </db:insert>
+        <ee:transform doc:name="Create Transform" doc:id="vvicbo" >
+            <ee:message >
+                <ee:set-payload doc:name="Set payload" doc:id="bvccoq" resource="dw/create-new-task-response.dwl"/>
+            </ee:message>
+        </ee:transform>
+        <logger doc:name="End Logger" doc:id="qcauie" message="End - create new task"/></sub-flow>
+</mule>

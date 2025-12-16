@@ -1,0 +1,23 @@
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+	http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+	http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    <sub-flow name="get-alltasks-subflow">
+        <logger doc:name="Logger" doc:id="fqqxpr" message="Start -Get all Tasks" />
+        <ee:transform doc:name="create sql query" doc:id="davrdz">
+            <ee:message>
+                <ee:set-payload doc:name="Set payload" doc:id="eennzv" resource="dw/get-all-tasks-request.dwl" />
+            </ee:message>
+        </ee:transform>
+        <db:select doc:name="Select" doc:id="fmvoaz" config-ref="Mysql_Database_Config">
+            <db:sql>
+                <![CDATA[#[payload]]]>
+            </db:sql>
+        </db:select>
+        <ee:transform doc:name="format to json reponse" doc:id="zeivuk">
+            <ee:message>
+                <ee:set-payload doc:name="Set payload" doc:id="afmlhk" resource="dw/get-all-tasks-response.dwl" />
+            </ee:message>
+        </ee:transform>
+        <logger doc:name="Logger" doc:id="ljcvwn" message="End - Get All Tasks" />
+    </sub-flow>
+</mule>
