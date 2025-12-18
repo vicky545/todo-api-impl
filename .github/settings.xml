@@ -7,26 +7,7 @@
       <password>${env.ANYPOINT_PASSWORD}</password>
     </server>
 
-    <server>
-      <id>mule-enterprise</id>
-      <username>${env.ANYPOINT_USERNAME}</username>
-      <password>${env.ANYPOINT_PASSWORD}</password>
-    </server>
+
   </servers>
-  <profiles>
-    <profile>
-      <id>mule-extra-repos</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <repositories>
-        <repository>
-          <id>mule-enterprise</id>
-          <name>MuleSoft Enterprise Repository</name>
-          <url>https://repository.mulesoft.org/nexus-ee/content/repositories/releases-ee/</url>
-          <layout>default</layout>
-        </repository>
-      </repositories>
-    </profile>
-  </profiles>
+
 </settings>
