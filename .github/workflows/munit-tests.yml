@@ -34,6 +34,9 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+        server-id: anypoint-exchange-v3
+        server-username: ANYPOINT_USERNAME
+        server-password: ANYPOINT_PASSWORD
         
     - name: Cache Maven dependencies
       uses: actions/cache@v4
@@ -63,6 +66,9 @@ jobs:
         
     - name: Run MUnit Tests
       run: mvn clean test
+      env:
+        ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
+        ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
       
     - name: Generate Test Report
       run: mvn surefire-report:report-only
