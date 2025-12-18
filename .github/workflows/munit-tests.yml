@@ -14,7 +14,7 @@ jobs:
       mysql:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: admin
           MYSQL_DATABASE: mysqldb
           MYSQL_USER: user
           MYSQL_PASSWORD: password
@@ -34,16 +34,7 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        server-id: anypoint-exchange-v3
-        server-username: ANYPOINT_USERNAME
-        server-password: ANYPOINT_PASSWORD
-        
-    - name: Cache Maven dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+        cache: maven
         
     - name: Wait for MySQL
       run: |
@@ -65,7 +56,7 @@ jobs:
         );"
         
     - name: Run MUnit Tests
-      run: mvn clean test
+      run: mvn clean test -s .github/settings.xml
       env:
         ANYPOINT_USERNAME: ${{ secrets.ANYPOINT_USERNAME }}
         ANYPOINT_PASSWORD: ${{ secrets.ANYPOINT_PASSWORD }}
