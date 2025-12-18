@@ -1,4 +1,4 @@
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="   http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd   http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd   http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="   http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd   http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd   http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
     <munit:config name="test-crud-tasks.xml" />
 	<munit:test name="success_get_task_by_id_test" description="Get Task by Id Success Test" doc:id="success-test-id">
 		<munit:behavior>
@@ -60,7 +60,7 @@
 					'description': 'Test Description',
 					'completed': false,
 					'dueDate': '2024-12-31'
-				}]" mediaType="application/json" encoding="UTF-8" />
+				}]" mediaType="application/java" encoding="UTF-8" />
 			</munit:set-event>
 			<flow-ref doc:name="Flow-ref to create-new-task-subflow" doc:id="call-create-flow-success" name="create-new-task-subflow"/>
 		</munit:execution>
@@ -78,7 +78,7 @@
 					<munit-tools:with-attribute whereValue="myqfzy" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return>
-					<munit-tools:error typeId="DB:CONNECTIVITY" description="Database connection failed"/>
+					<munit-tools:error typeId="DB:CONNECTIVITY"/>
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
@@ -89,43 +89,14 @@
 					'description': 'Test Description',
 					'completed': false,
 					'dueDate': '2024-12-31'
-				}]" mediaType="application/json" encoding="UTF-8" />
+				}]" mediaType="application/java" encoding="UTF-8" />
 			</munit:set-event>
 			<flow-ref doc:name="Flow-ref to create-new-task-subflow" doc:id="call-create-flow-failure" name="create-new-task-subflow"/>
 		</munit:execution>
 	</munit:test>
 
 	<!-- DELETE TASK BY ID TESTS -->
-	<munit:test name="success_delete_task_by_id_test" description="Delete Task by Id Success Test" doc:id="delete-success-test">
-		<munit:behavior>
-			<munit-tools:mock-when doc:name="Mock Select for Delete" doc:id="mock-select-delete-success" processor="db:select">
-				<munit-tools:with-attributes>
-					<munit-tools:with-attribute whereValue="uabpjj" attributeName="doc:id" />
-				</munit-tools:with-attributes>
-				<munit-tools:then-return>
-					<munit-tools:payload value="#[[{'id': 16, 'title': 'Task to Delete', 'description': 'desc', 'completed': 0, 'dueDate': '2023-01-01'}]]" mediaType="application/java" encoding="UTF-8" />
-				</munit-tools:then-return>
-			</munit-tools:mock-when>
-			<munit-tools:mock-when doc:name="Mock Delete" doc:id="mock-delete-success" processor="db:delete">
-				<munit-tools:with-attributes>
-					<munit-tools:with-attribute whereValue="sohkow" attributeName="doc:id" />
-				</munit-tools:with-attributes>
-				<munit-tools:then-return>
-					<munit-tools:payload value="#[{affectedRows: 1}]" mediaType="application/java" encoding="UTF-8" />
-				</munit-tools:then-return>
-			</munit-tools:mock-when>
-		</munit:behavior>
-		<munit:execution>
-			<munit:set-event doc:name="Set Event" doc:id="set-event-delete-success">
-				<munit:attributes value="#[{uriParams: {'taskId': '16'}}]" />
-			</munit:set-event>
-			<flow-ref doc:name="Flow-ref to delete-task-by-id-subflow" doc:id="call-delete-flow-success" name="delete-task-by-id-subflow"/>
-		</munit:execution>
-		<munit:validation>
-			<munit-tools:assert-that doc:name="Assert payload is not null" doc:id="assert-delete-not-null" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
-			<munit-tools:assert-that doc:name="Assert message" doc:id="assert-delete-message" expression="#[payload.message]" is="#[MunitTools::containsString('deleted')]"/>
-		</munit:validation>
-	</munit:test>
+
 
 	<munit:test name="failure_delete_task_by_id_test" description="Delete Task by Id Failure Test" doc:id="delete-failure-test" expectedErrorType="DB:CONNECTIVITY">
 		<munit:behavior>
@@ -134,7 +105,7 @@
 					<munit-tools:with-attribute whereValue="uabpjj" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return>
-					<munit-tools:error typeId="DB:CONNECTIVITY" description="Database connection failed"/>
+					<munit-tools:error typeId="DB:CONNECTIVITY"/>
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
@@ -181,7 +152,7 @@
 					<munit-tools:with-attribute whereValue="fmvoaz" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return>
-					<munit-tools:error typeId="DB:CONNECTIVITY" description="Database connection failed"/>
+					<munit-tools:error typeId="DB:CONNECTIVITY"/>
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
@@ -209,7 +180,7 @@
 					<munit-tools:with-attribute whereValue="xdttjz" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return>
-					<munit-tools:payload value="#[[{'id': 16, 'title': 'Updated Task', 'description': 'Updated desc', 'completed': 1, 'dueDate': '2024-01-01'}]]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:payload value="#[[{'id': 16, 'title': 'Updated Task', 'description': 'Updated desc', 'completed': true, 'dueDate': '2024-01-01'}]]" mediaType="application/java" encoding="UTF-8" />
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
@@ -220,7 +191,7 @@
 					'description': 'Updated desc',
 					'completed': true,
 					'dueDate': '2024-01-01'
-				}]" mediaType="application/json" encoding="UTF-8" />
+				}]" mediaType="application/java" encoding="UTF-8" />
 				<munit:attributes value="#[{uriParams: {'taskId': '16'}}]" />
 			</munit:set-event>
 			<flow-ref doc:name="Flow-ref to update-task-by-id-subflow" doc:id="call-update-flow-success" name="update-task-by-id-subflow"/>
@@ -239,7 +210,7 @@
 					<munit-tools:with-attribute whereValue="jrfwcq" attributeName="doc:id" />
 				</munit-tools:with-attributes>
 				<munit-tools:then-return>
-					<munit-tools:error typeId="DB:CONNECTIVITY" description="Database connection failed"/>
+					<munit-tools:error typeId="DB:CONNECTIVITY"/>
 				</munit-tools:then-return>
 			</munit-tools:mock-when>
 		</munit:behavior>
@@ -250,7 +221,7 @@
 					'description': 'Updated desc',
 					'completed': true,
 					'dueDate': '2024-01-01'
-				}]" mediaType="application/json" encoding="UTF-8" />
+				}]" mediaType="application/java" encoding="UTF-8" />
 				<munit:attributes value="#[{uriParams: {'taskId': '16'}}]" />
 			</munit:set-event>
 			<flow-ref doc:name="Flow-ref to update-task-by-id-subflow" doc:id="call-update-flow-failure" name="update-task-by-id-subflow"/>

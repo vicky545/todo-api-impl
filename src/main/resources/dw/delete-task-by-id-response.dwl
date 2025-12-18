@@ -1,7 +1,7 @@
 %dw 2.0
 output application/json
 ---
-if (payload > 0) 
+if (payload.affectedRows > 0) 
     (vars.deletedRecord map {
         id: $.id as String,
         title: $.title,
