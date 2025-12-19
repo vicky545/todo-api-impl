@@ -9,5 +9,12 @@
 
 
   </servers>
+  <mirrors>
+    <mirror>
+      <id>force-public-for-private</id>
+      <mirrorOf>mulesoft-private</mirrorOf>
+      <url>https://repository.mulesoft.org/releases/</url>
+    </mirror>
+  </mirrors>
 
 </settings>
